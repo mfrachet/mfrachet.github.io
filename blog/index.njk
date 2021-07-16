@@ -30,7 +30,7 @@
                     <h1>Blog posts</h1>
 
                     {%- for post in collections.post| reverse -%}
-                        <article aria-labelledby="{{ post.url }} {{ post.url }}-date" class="post">
+                        <article aria-describedby="{{ post.url }}-date" class="post">
 
                             <time id="{{ post.url }}-date" aria-hidden="true">
                             Published the {{ post.date | readableDate }}
