@@ -2,11 +2,11 @@ import { Link } from "gatsby";
 import * as React from "react";
 
 export const Navbar = () => {
-  const [theme, setTheme] = React.useState("light");
+  const [theme, setTheme] = React.useState("dark");
   const [visibleOnMobile, setVisibleOnMobile] = React.useState(false);
 
   React.useLayoutEffect(() => {
-    const localTheme = window.localStorage.getItem("theme") || "light";
+    const localTheme = window.localStorage.getItem("theme") || "dark";
 
     setTheme(localTheme);
   }, []);
