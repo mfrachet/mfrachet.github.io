@@ -8,14 +8,13 @@ module.exports = {
     title: "Marvin Frachet",
   },
   plugins: [
-    "gatsby-image",
     "gatsby-plugin-image",
     `gatsby-plugin-sharp`,
     `gatsby-transformer-sharp`,
     `gatsby-transformer-remark`,
+    "gatsby-remark-images",
     "gatsby-plugin-react-helmet",
     "gatsby-plugin-sitemap",
-    "gatsby-remark-images",
     {
       resolve: "gatsby-source-graphql",
       options: {
@@ -83,12 +82,10 @@ module.exports = {
       resolve: `gatsby-plugin-mdx`,
       options: {
         gatsbyRemarkPlugins: [
-          {
-            resolve: `gatsby-remark-images`,
-          },
+          { resolve: `gatsby-remark-images` },
           { resolve: `gatsby-remark-prismjs` },
         ],
-        plugins: [`gatsby-remark-images`, "gatsby-remark-prismjs"],
+        plugins: ["gatsby-remark-images", "gatsby-remark-prismjs"],
         defaultLayouts: {
           posts: require.resolve("./src/layouts/posts-layout.js"),
           snippets: require.resolve("./src/layouts/posts-layout.js"),
