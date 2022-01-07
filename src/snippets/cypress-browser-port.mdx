@@ -1,0 +1,24 @@
+---
+title: "Get Cypress browser port"
+date: 2022-01-07
+excerpt: ""
+metaImage: ../images/accessibility.png
+metaKeywords: "accessibility, css, web, ethics, inclusion"
+tags: ["snippet"]
+---
+
+One way (it may exist other ways, and if you know about them, I will be more than happy to hear from that) to get the Cypress chromium based browsers port. It's the trick I use in [cypress-audit](https://github.com/mfrachet/cypress-audit).
+
+```js
+module.exports = (on, config) => {
+  on("before:browser:launch", (browser = {}, launchOptions) => {
+    const remoteDebuggingPort = launchOptions.args.find((config) =>
+      config.includes("--remote-debugging-port=")
+    );
+
+    if (remoteDebuggingPort) {
+      const port = remoteDebuggingPort.split("=")[1];
+    }
+  });
+};
+```

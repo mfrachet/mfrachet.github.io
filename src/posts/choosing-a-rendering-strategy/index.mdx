@@ -1,0 +1,113 @@
+---
+title: "Choosing a rendering strategy"
+date: 2020-05-25
+metaImage: ssr-logo.jpg
+metaKeywords: "ssr, ssg, server side rendering, static site generation, crs, client side rendering, react, nextjs, gatsby"
+excerpt: "This post is about describing a set of React Rendering Strategies and give hints on which one to pick and when."
+tags: ["post"]
+---
+
+This post is about describing a set of React Rendering Strategies and give hints on which one to pick and when.
+
+In the beginning, when we had to write frontend applications, everything was happening inside the browser. To retrieve the content of a page, here's what happened:
+
+- The browser requested a specific endpoint
+- It downloaded an empty HTML file that only contains a bunch of `<script>` tags
+- It resolved/parsed/compiled the JavaScript code
+- It executed the JavaScript code
+- The application could now be displayed
+
+This is how [Angularjs](https://angularjs.org/) applications were working back in the days. And this is also how [create-react-app](https://github.com/facebook/create-react-app) works.
+
+## Why wasn't it enough?
+
+When building applications that way, **we always have to wait** for the JavaScript code to be resolved/parsed/compiled/executed **before displaying anything** on the screen since
+the JavaScript application is responsible for displaying the page content.
+
+<aside>
+  <p>
+    This Rendering Strategy is called
+    <a href="https://developers.google.com/web/updates/2019/02/rendering-on-the-web#csr">
+      Client Side Rendering(CSR)
+    </a>
+    and means that everything runs on the client: in this situation,
+    <strong>the browser</strong>.
+  </p>
+</aside>
+
+Running everything on the client-side has drawbacks:
+
+- CSR applications are not optimized for SEO ([SEO works, but it's a bit more complicated](https://developers.google.com/web/updates/2019/02/rendering-on-the-web#seo))
+- We don't benefit from a good media sharing experience
+- Displaying the first meaningful content or wait for the application to be interactive can take time when the application is big
+
+## How to solve these problems?
+
+The main way to solve this problem is to shift the first page rendering to the server.
+
+Instead of requesting an empty HTML file and leave the responsibility to display the content to the browser using JavaScript, we can request an endpoint that will return **an already full page containing all the HTML markup** with the content inside.
+
+```git
+- CSR applications are not optimized for SEO
++ HTML is optimized for SEO
+
+- We don't benefit from a good media sharing experience
++ Pre-filled HTML owns the necessary meta to have a good sharing experience
+
+- Displaying the first meaningful content or wait for the application to be interactive can take time
++ Displaying HTML content is probably one of the fastest things a browser can do
+```
+
+This is the most basic way to think about [Server Side Rendering (SSR)](https://developers.google.com/web/updates/2019/02/rendering-on-the-web#server-rendering) where the server is now responsible for providing the page content.
+
+Since this idea is very broad, it opened doors to multiple Rendering Strategies relying on different mechanisms to achieve these goals.
+
+### Runtime SSR
+
+- Start a NodeJS server
+- When a request is made, render static HTML content
+- When the browser is ready, start a client-side application for interactivity
+
+It's a very convenient approach since it allows to render **every page** on the server. Even the ones that protected using authentication. This capability is not possible using other rendering strategies.
+
+It's also worth mentioning that when building Runtime SSR by hand, without using dedicated tools, it can be complex to put into practice. Running runtime SSR at scale might also have a cost since one or multiple NodeJS servers have to be running to be responsive to the traffic.
+
+However, tools like [Nextjs](https://nextjs.org/docs/basic-features/pages#server-side-rendering) have made this a breath to work with this approach.
+
+### Static Generation (without JavaScript)
+
+- At build time (when running the equivalence of `npm run build`)
+- Generate as many **HTML files (.html)** as necessary
+- When a request is made, render the associated .html file
+
+This approach is common in the documentation/blogging area where interactivity may not be a requirement but fast page loading is important. It's an approach that exists for years now thanks to tools like
+[Jekyll](https://github.com/jekyll/jekyll) or [Hugo](https://github.com/gohugoio/hugo) in other ecosystems. In the JavaScript one, it's worth mentioning [Docusaurus](https://docusaurus.io/), [11ty](https://github.com/11ty/eleventy/), or [VuePress](https://github.com/vuejs/vuepress).
+
+### Build time SSR / Pre-rendering
+
+_The naming might not be perfect. We often refer to this technic as SSG, but since it's a little bit different, I prefer to give it a dedicated name for the sake of clarity._
+
+- At build time (when running `npm run build` or `yarn build`)
+- Generate as many **HTML files (.html)** as necessary
+- When a request is made, render the associated .html file
+- When the browser is ready, start a client-side application for interactivity
+
+This approach mixes SSG and CSR to create scalable and interactive experiences.
+
+With this approach, people from certain teams can contribute public pages that are very fast to load, but it does not prevent having richer experiences such as dashboards for authenticated users, etc. that SSG (strictly speaking) does not provide.
+
+This approach is considered very scalable, highly interactive, not too complex to use in practice, and not expensive thanks to CDN hostings.
+
+Tools: [Gatsby](https://www.gatsbyjs.org/), [Nextjs](https://nextjs.org/)
+
+## How to choose?
+
+The great news is that <strong>you don't have to</strong>.
+
+**All these technics can be used in the same project** but serve different purposes depending on the use cases. [Nextjs](https://nextjs.org/docs) folks, in particular, have made huge efforts to allow for mixing the strategies depending on their users' needs.
+
+**However**, sometimes we have very precise use cases and we want a tool that solves that specific problem.
+
+If you're in one of these situations, the following diagram is one of the mental representations I'm using to determine when I would consider using a technic over another one in a given situation. **Note that this is a personal thing**.
+
+![Mental SSR path to make a choice](./ssr.png)

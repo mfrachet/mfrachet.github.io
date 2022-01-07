@@ -1,0 +1,36 @@
+---
+title: "Visually hidden and explanations"
+date: 2022-01-06
+excerpt: ""
+metaImage: ../images/accessibility.png
+metaKeywords: "accessibility, css, web, ethics, inclusion"
+tags: ["snippet"]
+---
+
+Guarantee that something is not visually visible and does not cause layout problems but still make the content available for assistive technologies (+ explanations on the impact of other CSS technics).
+
+```css
+.opacity {
+  opacity: 0; /* computed in layout, exist in accessibility tree */
+}
+
+.display-none {
+  display: none; /* not computed  in layout nor in accessibility tree */
+}
+
+.hidden {
+  visibility: hidden; /* computed in layout, not in accessibility tree */
+}
+
+/* exist in layout but doesn't take space, exist in accessibility tree  */
+.visually-hidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+```

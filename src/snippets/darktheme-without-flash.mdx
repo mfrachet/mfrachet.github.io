@@ -1,0 +1,59 @@
+---
+title: "Dark theme without flash on initial load"
+date: 2022-01-06
+excerpt: ""
+metaImage: ../images/ui.png
+metaKeywords: "javascript, css, web, design system"
+tags: ["snippet"]
+---
+
+This tricks comes from [Josh W Comeau](https://twitter.com/JoshWComeau) and is detailed in [The Quest for the Perfect Dark Mode](https://www.joshwcomeau.com/react/dark-mode/).
+
+The problem solved is: **how to avoid the first flash when resolving a theme from the local storage on first load?**
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title of the page</title>
+
+    <script>
+      // This script is blocking and the document won't be shown
+      // unless this script has finished its job. It's
+      // the perfect place to resolve the theme from
+      // local storage and play with it
+      var DarkTheme = {
+        text: "white",
+        background: "black",
+      };
+
+      var LightTheme = {
+        text: "black",
+        background: "white",
+      };
+
+      var actualTheme = window.localStorage.getItem("theme") || "dark";
+      var theme = actualTheme === "light" ? LightTheme : DarkTheme;
+
+      var root = window.document.documentElement;
+      root.style.setProperty("--color-text", theme.text);
+      root.style.setProperty("--color-text", theme.background);
+
+      // But we can't use document.querySelector or rely on other magic
+      // because the browser has not finished processing the whole document
+    </script>
+  </head>
+
+  <body>
+    Content of the website
+  </body>
+
+  <script>
+    // however, when reaching this script, "actualTheme" is resolved,
+    // so is "document" and we have access to the whole document.
+    // This is usuallywhere frontend frameworks loads
+    // and hydrates the document.
+    console.log("The theme is", actualTheme);
+  </script>
+</html>
+```

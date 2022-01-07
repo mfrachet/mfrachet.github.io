@@ -1,0 +1,30 @@
+---
+title: "Keyboard keys"
+date: 2022-01-06
+excerpt: ""
+metaImage: ../images/accessibility.png
+metaKeywords: "accessibility, css, web, ethics, inclusion"
+tags: ["snippet"]
+---
+
+When dealing with `onKeyDown` event, make sure to rely on the `e.key` attribute and compare it to the following.
+
+```js
+export const KeyboardKeys = {
+  DOWN: "ArrowDown",
+  UP: "ArrowUp",
+  RIGHT: "ArrowRight",
+  LEFT: "ArrowLeft",
+  ESCAPE: "Escape",
+  ENTER: "Enter",
+  SPACE: " ",
+  TAB: "Tab",
+  END: "End",
+  HOME: "Home",
+  DELETE: "Delete",
+  PAGE_UP: "PageUp",
+  PAGE_DOWN: "PageDown",
+  BACKSPACE: "Backspace",
+  CLEAR: "Clear",
+};
+```
