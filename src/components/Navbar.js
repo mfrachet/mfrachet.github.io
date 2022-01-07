@@ -1,5 +1,8 @@
 import { Link } from "gatsby";
 import * as React from "react";
+import { MenuIcon } from "./MenuIcon";
+import { MoonIcon } from "./MoonIcon";
+import { SunIcon } from "./SunIcon";
 
 export const Navbar = () => {
   const [theme, setTheme] = React.useState("dark");
@@ -41,7 +44,7 @@ export const Navbar = () => {
             className="navbar-toggle"
             onClick={() => setVisibleOnMobile((s) => !s)}
           >
-            Toggle menu
+            <MenuIcon aria-hidden /> Toggle menu
           </button>
 
           <div className="not-mobile">{listMenu}</div>
@@ -56,7 +59,11 @@ export const Navbar = () => {
               window.clickToSwitchTheme(nextTheme);
             }}
           >
-            Switch to <strong>{theme === "light" ? "dark" : "light"}</strong>{" "}
+            {theme === "dark" && <SunIcon aria-hidden />}
+            {theme === "light" && <MoonIcon aria-hidden />}
+            <span>
+              Switch to <strong>{theme === "light" ? "dark" : "light"}</strong>
+            </span>
           </button>
         </div>
 

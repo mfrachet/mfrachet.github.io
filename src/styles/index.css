@@ -317,7 +317,8 @@ img {
   }
 
   .navbar-toggle {
-    display: block;
+    display: flex;
+    align-items: center;
     padding: var(--s-3);
     margin: var(--s-2);
     background: transparent;
@@ -326,6 +327,11 @@ img {
     cursor: pointer;
     border: 1px solid var(--text-color800);
     border-radius: 4px;
+  }
+
+  .navbar-toggle svg {
+    margin-right: var(--s-2);
+    font-size: var(--fs-2);
   }
 
   .navbar-toggle:active {
@@ -390,6 +396,8 @@ p.subtitle {
 }
 
 .btn {
+  display: flex;
+  align-items: center;
   background: none;
   border: none;
   color: var(--text-color800);
@@ -398,6 +406,10 @@ p.subtitle {
   padding: var(--s-2);
   transition-duration: 0.2s;
   transition-property: background-color;
+}
+
+.btn svg {
+  margin-right: var(--s-1);
 }
 
 .btn:hover {
