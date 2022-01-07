@@ -49,22 +49,25 @@ export const Navbar = () => {
 
           <div className="not-mobile">{listMenu}</div>
 
-          <button
-            className="btn"
-            onClick={() => {
-              const nextTheme = theme === "light" ? "dark" : "light";
+          <div>
+            <button
+              className="btn"
+              onClick={() => {
+                const nextTheme = theme === "light" ? "dark" : "light";
 
-              setTheme(nextTheme);
+                setTheme(nextTheme);
 
-              window.clickToSwitchTheme(nextTheme);
-            }}
-          >
-            {theme === "dark" && <SunIcon aria-hidden />}
-            {theme === "light" && <MoonIcon aria-hidden />}
-            <span>
-              Switch to <strong>{theme === "light" ? "dark" : "light"}</strong>
-            </span>
-          </button>
+                window.clickToSwitchTheme(nextTheme);
+              }}
+            >
+              {theme === "dark" && <SunIcon aria-hidden />}
+              {theme === "light" && <MoonIcon aria-hidden />}
+              <span>
+                Switch to{" "}
+                <strong>{theme === "light" ? "dark" : "light"}</strong>
+              </span>
+            </button>
+          </div>
         </div>
 
         <div

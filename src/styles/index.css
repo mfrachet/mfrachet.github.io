@@ -320,13 +320,14 @@ img {
     display: flex;
     align-items: center;
     padding: var(--s-3);
-    margin: var(--s-2);
     background: transparent;
     border: none;
     color: var(--text-color800);
     cursor: pointer;
     border: 1px solid var(--text-color800);
     border-radius: 4px;
+    font-size: var(--fs-2);
+    margin-left: var(--s-2);
   }
 
   .navbar-toggle svg {
@@ -376,6 +377,7 @@ p.subtitle {
   .avatar {
     height: 200px;
     width: 200px;
+    margin-right: unset;
   }
 }
 
@@ -422,7 +424,8 @@ p.subtitle {
 
 @media only screen and (max-width: 1000px) {
   .btn {
-    padding: var(--s-4);
+    padding: var(--s-3);
+    font-size: var(--fs-2);
   }
 }
 /* end of homepage stuff */
