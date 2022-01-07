@@ -1,0 +1,5 @@
+{
+    "componentChunkName": "component---src-pages-blog-js",
+    "path": "/blog/",
+    "result": {"data":{"allMdx":{"edges":[{"node":{"frontmatter":{"title":"Right in my dev shoes","date":"2021-04-18T00:00:00.000Z"},"slug":"right-in-my-dev-shoes/"}},{"node":{"frontmatter":{"title":"Accessible forms","date":"2021-03-25T00:00:00.000Z"},"slug":"accessibility/accessible-forms/"}},{"node":{"frontmatter":{"title":"Accessible font-size","date":"2021-03-23T00:00:00.000Z"},"slug":"accessibility/accessible-font-size/"}},{"node":{"frontmatter":{"title":"A/B testing with the JAMstack","date":"2020-10-25T00:00:00.000Z"},"slug":"a-b-testing-with-the-jamstack/"}},{"node":{"frontmatter":{"title":"Choosing a rendering strategy","date":"2020-05-25T00:00:00.000Z"},"slug":"choosing-a-rendering-strategy/"}},{"node":{"frontmatter":{"title":"Why I don't like Gitflow?","date":"2020-05-19T00:00:00.000Z"},"slug":"why-i-dont-like-gitflow/"}}]}},"pageContext":{}},
+    "staticQueryHashes": []}
