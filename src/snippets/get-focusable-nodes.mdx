@@ -1,0 +1,27 @@
+---
+title: "Get focusable nodes using querySelectorAll"
+date: 2022-01-07
+excerpt: ""
+metaImage: ../images/accessibility.png
+metaKeywords: "accessibility, css, web, ethics, inclusion"
+tags: ["snippet"]
+---
+
+
+```js
+// "node" is a DOM node, practical for usage inside of modals
+// "includeNegativeTabIndex" allows to retrieve element with negative tabindex
+export const getFocusableNodes = (node, includeNegativeTabIndex) => {
+  const nodes = [
+    ...node.querySelectorAll('a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])'),
+  ];
+  const focusables = nodes.filter((node) => {
+    if (node.hasAttribute('disabled')) return false;
+    if (includeNegativeTabIndex) return true;
+
+    return node.getAttribute('tabindex') !== '-1';
+  });
+
+  return focusables;
+};
+```
