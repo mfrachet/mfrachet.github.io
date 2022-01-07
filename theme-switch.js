@@ -50,5 +50,5 @@ function clickToSwitchTheme() {
 }
 
 // Prevent theme verification from flashing
-var actualTheme = window.localStorage.getItem("theme") || "light";
+var actualTheme = window.localStorage.getItem("theme") || "dark";
 switchTheme(actualTheme);
