@@ -1,5 +1,5 @@
 {
     "componentChunkName": "component---src-posts-accessibility-accessible-forms-index-mdx",
     "path": "/accessibility/accessible-forms/",
-    "result": {"pageContext":{"frontmatter":{"title":"Accessible forms","date":"2021-03-25T00:00:00.000Z","metaImage":"./accessibility.png","metaKeywords":"accessibility, react, javascript, web, ethics, inclusion, css","excerpt":"When designing forms on the web, one common pattern is to display each field with the possibility to validates their content and to put the eventual errors next to the fields themselves.","tags":["post"]}}},
+    "result": {"pageContext":{"frontmatter":{"title":"Accessible forms","date":"2021-03-25T00:00:00.000Z","metaImage":"accessibility.jpg","metaKeywords":"accessibility, react, javascript, web, ethics, inclusion, css","excerpt":"When designing forms on the web, one common pattern is to display each field with the possibility to validates their content and to put the eventual errors next to the fields themselves.","tags":["post"]}}},
     "staticQueryHashes": []}
