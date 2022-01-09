@@ -13,11 +13,14 @@
     "build": "gatsby build",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
-    "deploy": "npm run build && gh-pages -b master -d public"
+    "deploy": "npm run build && gh-pages -b master -d public",
+    "e2e": "cypress open",
+    "e2e:ci": "cypress run --headless --browser chrome"
   },
   "dependencies": {
     "@mdx-js/mdx": "^1.6.22",
     "@mdx-js/react": "^1.6.22",
+    "cypress-sitemap-urls": "^1.0.0",
     "gatsby": "^4.4.0",
     "gatsby-image": "^3.11.0",
     "gatsby-plugin-image": "^2.4.0",
@@ -40,6 +43,8 @@
     "react-helmet": "^6.1.0"
   },
   "devDependencies": {
+    "@cypress-audit/lighthouse": "^1.1.0",
+    "cypress": "^9.2.0",
     "gh-pages": "^3.2.3"
   }
 }
