@@ -9,6 +9,7 @@ const components = {};
 
 export default function PostLayout({ children, pageContext }) {
   const { frontmatter } = pageContext;
+  const metaImage = `/meta/${frontmatter.metaImage}`;
 
   return (
     <MDXProvider components={components}>
@@ -27,7 +28,7 @@ export default function PostLayout({ children, pageContext }) {
           />
 
           <meta property="og:title" content={frontmatter.title} />
-          <meta property="og:image" content={frontmatter.metaImage} />
+          <meta property="og:image" content={metaImage} />
 
           <meta name="author" content="Marvin Frachet" />
         </Helmet>

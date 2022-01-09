@@ -58,6 +58,7 @@ module.exports = {
         name: `posts`,
         path: `${__dirname}/src/posts/`,
       },
+      __key: "posts",
     },
     {
       resolve: "gatsby-plugin-page-creator",
@@ -68,9 +69,10 @@ module.exports = {
     {
       resolve: `gatsby-source-filesystem`,
       options: {
-        name: `posts`,
+        name: `snippets`,
         path: `${__dirname}/src/snippets/`,
       },
+      __key: "snippets",
     },
     {
       resolve: "gatsby-plugin-page-creator",
@@ -83,7 +85,12 @@ module.exports = {
       options: {
         gatsbyRemarkPlugins: [
           { resolve: `gatsby-remark-images` },
-          { resolve: `gatsby-remark-prismjs` },
+          {
+            resolve: `gatsby-remark-prismjs`,
+            options: {
+              showLineNumbers: false,
+            },
+          },
         ],
         plugins: ["gatsby-remark-images", "gatsby-remark-prismjs"],
         defaultLayouts: {

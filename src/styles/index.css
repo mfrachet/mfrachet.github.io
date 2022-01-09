@@ -183,22 +183,6 @@ a {
   padding: var(--s-3);
 }
 
-p > code {
-  color: var(--primary-color);
-  padding: var(--s-0);
-  border-radius: 4px;
-  font-size: var(--fs-1);
-  background: red;
-}
-
-li > code {
-  color: var(--primary-color);
-  background: red;
-  padding: var(--s-0);
-  border-radius: 4px;
-  font-size: var(--fs-1);
-}
-
 #skip-to-content {
   border: 0;
   clip: rect(0 0 0 0);
@@ -326,7 +310,7 @@ img {
     cursor: pointer;
     border: 1px solid var(--text-color800);
     border-radius: 4px;
-    font-size: var(--fs-2);
+    font-size: var(--fs-1);
     margin-left: var(--s-2);
   }
 
@@ -424,8 +408,8 @@ p.subtitle {
 
 @media only screen and (max-width: 1000px) {
   .btn {
-    padding: var(--s-3);
-    font-size: var(--fs-2);
+    padding: var(--s-2);
+    font-size: var(--fs-1);
   }
 }
 /* end of homepage stuff */
