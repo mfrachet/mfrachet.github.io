@@ -1,0 +1,52 @@
+---
+title: "Basic headers for HTTP caching"
+date: 2022-01-18
+excerpt: ""
+metaImage: ../images/accessibility.png
+metaKeywords: "http, caching, web"
+tags: ["snippet"]
+---
+
+## Etag
+
+`etat` means "Entity Tag". It aims to set the version of a given resource.
+
+**A flow:**
+
+- When creating a response on the server, put a `etag` header with a value
+- When a new request comes in, compare the `if-none-match` header with the previously generated `etag`
+  - If they match, return a `304` and forget about setting the body
+  - If they don't match, set the `etag` and repeat this process
+
+
+## max-age
+
+`max-age` allows to cache an HTTP response in the browser for `N` seconds.
+
+**A flow:**
+
+- When creating a response on the server, put a `max-age=N` (here, `N=10`) header with a number of seconds
+- When a new request comes in
+  - If the user has already visited the page during the last `N` seconds, get the response from the cache (in chrome `Network`, in the `Size` column, there is `disk-cache` or `memory-cache`)
+  - If the user has not visited the page the page in `N` seconds after its last visit, then, make a new HTTP request
+
+*Hint: putting a very high max-age on static assets generated with hashes, like webpack build artifacts is generally a good idea*.
+
+## CDN caching
+
+`max-age` is also used by CDN. If people want to define two different values for the CDN and for the origin server, `s-max-age` can be set and the CDN will only take care of this one and forward the `max-age` one to the origin server.
+Having a bigger `s-max-age` than `max-age` is often better since we don't want to ping the origin server too often.
+
+*Hint: it's generally possible to purge a CDN from their UIs or using remote APIs*.
+
+### stale-while-revalidate
+
+`stale-while-revalidate` allows to return a stale (and cached) version of the content to users for a given period of time but in the meantime, it refreshes its cache by calling the origin server.
+
+**A flow:**
+
+- When creating a response on the server, put a `max-age=N,stale-while-revalidate=S` (here, `N=10` and `S=20`) header with a number of seconds
+- When a new request comes in
+  - If the user has already visited the page during the last `N` seconds, get the cached value
+  - If the user has already visited the page during the last `S` seconds, meaning that `max-age` has expired, still get the cached value BUT revalidate in the background
+  - If the user has not visited the page again during the last `S` seconds, meaning that `max-age` and `stale-while-revalidate` has expired, then, the request will hit the origin server, and populate the CDN cache
