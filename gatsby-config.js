@@ -71,7 +71,6 @@ module.exports = {
       options: {
         name: `snippets`,
         path: `${__dirname}/src/snippets/`,
-        ignore: [`**/\.js`],
       },
       __key: "snippets",
     },

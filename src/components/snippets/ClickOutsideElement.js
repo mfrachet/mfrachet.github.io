@@ -1,23 +1,6 @@
----
-title: "Clicking outside element with React"
-date: 2022-01-21
-excerpt: ""
-metaImage: ../images/accessibility.png
-metaKeywords: "http, web, javascript, react"
-tags: ["snippet"]
----
+import React, { useEffect, useRef } from "react";
+import { MdxExample } from "../MdxExample";
 
-import { ClickOutsideElement } from "./ClickOutsideElement";
-
-This is a hook that is very useful when a dialog is opened and that we want to close it when clicking outside of it.
-
-## Example
-
-<ClickOutsideElement />
-
-## Implementation
-
-```jsx
 const useClickOutside = (ref, callback) => {
   const callbackRef = useRef(callback);
 
@@ -43,28 +26,34 @@ const useClickOutside = (ref, callback) => {
     return () => {
       document.removeEventListener("mouseup", handleMouseUp, true);
     };
-  }, []);
+  }, [ref]);
 };
-```
 
-Almost copy / paste from what [Chakra UI](https://chakra-ui.com/) does in [`useClickOutside`](https://github.com/chakra-ui/chakra-ui/blob/d1da680a2c29cf183a4f69bc1c5cc2aed0629345/packages/hooks/src/use-outside-click.ts).
-
-## Usage
-
-```jsx
-const Component = () => {
+export const ClickOutsideElement = () => {
   const modalRef = React.useRef(null);
   const [showContent, setShowContent] = React.useState(false);
 
   useClickOutside(modalRef, () => setShowContent(false));
 
+  const handleToggle = () => {
+    setShowContent(true);
+  };
+
   return (
-    <div>
-      <button onClick={() => setShowContent(true)}>Toggle content</button>
+    <MdxExample>
+      <button onClick={handleToggle}>Toggle content</button>
 
       {showContent && (
-        <div ref={modalRef}>
-          <p>
+        <div
+          style={{
+            background: "var(--bg-active)",
+            marginTop: "var(--s-2)",
+            borderRadius: 4,
+            padding: "var(--s-4)",
+          }}
+          ref={modalRef}
+        >
+          <p style={{ margin: 0 }}>
             This is the content. If you click outside the box, the content will
             be hidden.
           </p>
@@ -72,7 +61,6 @@ const Component = () => {
           <button>Clicking inside</button>
         </div>
       )}
-    </div>
+    </MdxExample>
   );
 };
-```
