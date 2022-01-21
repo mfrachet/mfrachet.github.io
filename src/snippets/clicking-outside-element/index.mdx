@@ -1,0 +1,78 @@
+---
+title: "Clicking outside element with React"
+date: 2022-01-21
+excerpt: ""
+metaImage: ../images/accessibility.png
+metaKeywords: "http, web, javascript, react"
+tags: ["snippet"]
+---
+
+import { ClickOutsideElement } from "./ClickOutsideElement";
+
+This is a hook that is very useful when a dialog is opened and that we want to close it when clicking outside of it.
+
+## Example
+
+<ClickOutsideElement />
+
+## Implementation
+
+```jsx
+const useClickOutside = (ref, callback) => {
+  const callbackRef = useRef(callback);
+
+  // Keep the callback fresh between renders
+  // preventing from passing "callback" to the useEffect
+  // that would clear the listener on every render when "callback" reference changes
+  callbackRef.current = callback;
+
+  useEffect(() => {
+    const handleMouseUp = (e) => {
+      // Do not trigger click outside on auxiliary buttons
+      // See MDN => https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button#value
+      if (e.button > 0) return false;
+
+      // Verify if the clicked element is contained by the one stored in "ref"
+      if (!ref.current?.contains(e.target)) {
+        callbackRef.current(e);
+      }
+    };
+
+    document.addEventListener("mouseup", handleMouseUp, true);
+
+    return () => {
+      document.removeEventListener("mouseup", handleMouseUp, true);
+    };
+  }, []);
+};
+```
+
+Almost copy / paste from what [Chakra UI](https://chakra-ui.com/) does in [`useClickOutside`](https://github.com/chakra-ui/chakra-ui/blob/d1da680a2c29cf183a4f69bc1c5cc2aed0629345/packages/hooks/src/use-outside-click.ts).
+
+## Usage
+
+```jsx
+const Component = () => {
+  const modalRef = React.useRef(null);
+  const [showContent, setShowContent] = React.useState(false);
+
+  useClickOutside(modalRef, () => setShowContent(false));
+
+  return (
+    <div>
+      <button onClick={() => setShowContent(true)}>Toggle content</button>
+
+      {showContent && (
+        <div ref={modalRef}>
+          <p>
+            This is the content. If you click outside the box, the content will
+            be hidden.
+          </p>
+
+          <button>Clicking inside</button>
+        </div>
+      )}
+    </div>
+  );
+};
+```
