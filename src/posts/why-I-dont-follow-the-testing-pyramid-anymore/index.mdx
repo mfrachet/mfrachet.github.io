@@ -1,0 +1,25 @@
+---
+title: "Why I don't follow the testing pyramid anymore?"
+date: 2022-02-07
+metaImage: "react.png"
+metaKeywords: "ssr, ssg, server side rendering, static site generation, crs, client side rendering, react, nextjs, gatsby, testing automation,testing, integration test, unit test, e2e test"
+excerpt: "This post is about describing a set of React Rendering Strategies and give hints on which one to pick and when."
+tags: ["post"]
+---
+
+_This post mostly target frontend development since I don't have that much knowledge on the backend side of apps._
+
+The testing pyramid shows 3 layers of tests: "unit", "integration" and "end to end". Each layer does not have the same size: it gives an idea about the amount of tests that should be written. For instance, it illustrates that an application may have way more unit tests (which is a the bottom of the pyramid) than end to end tests (which is at the top of the pyramid). Also, the higher in the pyramid the test is, the slower it is to run and the more it costs.
+
+![The test pyramid](./test-pyramid.png)
+
+The pyramid categorizes the tests we write.
+
+Depending on the team people are working with, a test category definition may not be exactly the same. For instance, what is the difference between an integration test and a unit test in the context of React components? From my experience, the answer varies widely.
+
+I'm a product developer. My goal is to provide helpful products and services to people in order to make their life easier. 
+
+
+- Why do we test?
+	- getting confidence
+	- implementing a feature following the rules we have

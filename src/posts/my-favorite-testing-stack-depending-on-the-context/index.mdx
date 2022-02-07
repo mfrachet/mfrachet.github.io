@@ -1,0 +1,41 @@
+---
+title: "My favorite testing stack depending on the context"
+date: 2022-02-07
+metaImage: "react.png"
+metaKeywords: "ssr, ssg, server side rendering, static site generation, crs, client side rendering, react, nextjs, gatsby, testing automation,testing, integration test, unit test, e2e test"
+excerpt: ""
+tags: ["post"]
+---
+
+## Stack for UI libraries
+
+When building UI libraries (for a design system for example) my main concern is to make sure the components behaviours and visual representations are the same across multiple browsers.
+
+The goal is really to make sure that things work consistently on as many different browsers as possible (depending on the scope of the project).
+
+**This implies accessibility verifications and styles verifications.**
+
+### The testing tool
+
+
+For this kind of project, I will try to use only one testing tool: [Playwright](https://playwright.dev/). I don't think it's necessary to over-complicate the initial problem.
+
+Playwright is a testing tool that starts browsers and that provides APIs to interact directly with them. It's like [Cypress](https://www.cypress.io/), except that **it can run on Safari** — and this is the reason why I would use Playwright instead of Cypress for this kind of projects. Being able to run on Firefox, [Chromium based browsers](https://en.wikipedia.org/wiki/Chromium_(web_browser)) and Safari allows me to get more confidence on a wide variety of browsers.
+
+_On a side note, I personnally find Playwright to be less intuitive to use than Cypress._
+
+### Catching accessibility issues the sooner
+
+Some accessibility issues (around 30%) can be caught with automation tools and so, can be part of the testing pipeline.
+
+In order to catch these issues, I like to rely on the [Axe plugin for Playwright](https://github.com/dequelabs/axe-core-npm/blob/develop/packages/playwright/README.md). An exhaustive list of issues that Axe can catch is available on [this page](https://dequeuniversity.com/rules/axe/4.4) (it includes color contrast, valid ARIA attributes and a lof more).
+
+### Catching visual regression the sooner
+
+This section might be a bit controversed. It's about using visual regression testing tools to make sure that the developers are aware of UI changes.
+
+The idea is to make sure and to strongly validate that **a UI is in a valid state concerning its stylings**.
+
+Tools like [Chromatic](https://www.chromatic.com/) (or [Percy](https://percy.io/)) allow to compare two versions of a component: a valid one, and a newly suggested one. If there are differences between them, the developers has to manually accept (or reject) the newly suggested one that will become (or not) the valid one.
+
+Most of the time, I'm using [Storybook](https://storybook.js.org/) to showcase the components of the UI libraries I'm building and Chromatic is a good fit in my experience.
