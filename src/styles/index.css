@@ -482,3 +482,7 @@ blockquote {
 blockquote > p {
   margin-top: 0;
 }
+
+a.anchor {
+  display: none;
+}

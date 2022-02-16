@@ -85,6 +85,7 @@ module.exports = {
       options: {
         gatsbyRemarkPlugins: [
           { resolve: `gatsby-remark-images` },
+          `gatsby-remark-autolink-headers`,
           {
             resolve: `gatsby-remark-prismjs`,
             options: {
@@ -92,7 +93,7 @@ module.exports = {
             },
           },
         ],
-        plugins: ["gatsby-remark-images", "gatsby-remark-prismjs"],
+        plugins: ["gatsby-remark-images"],
         defaultLayouts: {
           posts: require.resolve("./src/layouts/posts-layout.js"),
           snippets: require.resolve("./src/layouts/posts-layout.js"),
