@@ -1,0 +1,113 @@
+---
+title: "My favorite testing stack depending on the context"
+date: 2022-02-07
+metaImage: "react.png"
+metaKeywords: "ssr, ssg, server side rendering, static site generation, crs, client side rendering, react, nextjs, gatsby, testing automation,testing, integration test, unit test, e2e test"
+excerpt: ""
+tags: ["post"]
+---
+
+This post is about sharing my favorite testing stack depending on the context. Note that the tools used are not the same for explained reasons but also because I would prefer to use what seems to be the best tool for the given situation I'm in.
+
+- [Stack for a product](#stack-for-a-product)
+  * [Testing the transitioning states](#testing-the-transitioning-states)
+  * [Testing the E2E integration](#testing-the-e2e-integration)
+- [Stack for UI libraries](#stack-for-ui-libraries)
+  * [The testing tool](#the-testing-tool)
+  * [Playwright and keyboard navigation tests](#playwright-and-keyboard-navigation-tests)
+  * [Catching accessibility issues the sooner](#catching-accessibility-issues-the-sooner)
+  * [Catching visual regressions the sooner](#catching-visual-regressions-the-sooner)
+
+## Stack for a product
+
+When building a product, my main concern is to make sure the overall behavior is valid. I'm going to verify that the different pages create values by following business guidelines.
+As part of this, I love writing 2 different kinds of tests (note that naming testing categories is not my business, I let you decide what they are).
+
+### Testing the transitioning states
+
+This corresponds to every intermediate states that may happen during a page lifecycle. For instance, when fetching data from the browser, we could
+
+- verify the **loading** state of the page, checking that it's valid from an accessibility perspective
+- verify the **error** state of the page and making sure it's meaningful
+- verify the **empty** state of the page: what happens when I have 0 products to show on a page?
+- verify the **fulfilled** state of the page, when the data has been resolved
+
+For this kind of verification, I like to rely on [Jest](https://jestjs.io/fr/docs/getting-started), [Testing Library](https://testing-library.com/docs/react-testing-library/intro/) and [MSW](https://mswjs.io/).
+Also, note that I'm from the "mock as less as possible" school: in an ideal world, no mocks at all. In my experience, I didn't work on applications that would have such complex computations on the frontend that would require mocking javascript modules for simplicity reasons. Stubbing API responses was all I needed.
+
+I'm testing these transitioning states with these tools (and not Cypress) for speed reasons. [While experimenting on my machine](https://github.com/mfrachet/tests), Jest tests (from a single file, no parallelization) were ~8 times faster than their Cypress concurrent, and they require way less setup on the CI.
+
+### Testing the E2E integration
+
+It corresponds to starting the whole application, from the frontend to the database, passing by the backend. The idea is to verify the overall coherence of the data flow from one end to the other by navigating, like a regular user on the different pages of the app.
+
+This kind of test takes time to run, they are hard to set up, but they provide a lot of confidence. From my experience, the earlier in the project process they are set up, the easier they are to maintain. Since they are costly, it's important not to run too much of them and
+to scope what is critical in the application process.
+
+For this kind of test, I love [Cypress](https://www.cypress.io/). It's very fast, easy to set up on the frontend (I'm not talking about starting the backend and DB here) and the developer experience is a breath.
+
+As mentioned above, using this tool, I will try to make sure the business is meaningful and that my implementations resolve business use cases. It also means that I will test only what is predictable: I shouldn't be able to simulate a backend error (and the error case is already covered by the previous section).
+
+> Trick: To speed up Cypress tests, you can create a custom command for login that directly hit the API, without going through the whole UIs. Plus, if you have the opportunity, try to run the test on a SQLite database. It saved ~100 seconds of tests in one of my apps passing from ~130 seconds to only ~30 seconds.
+
+And of course, I will run accessibility page by page to make sure the application-specific semantic and ARIA things are valid with [cypress-axe](https://github.com/component-driven/cypress-axe).
+
+## Stack for UI libraries
+
+When building UI libraries (for a design system for example) my main concern is to make sure the components' behaviors and visual representations are the same across multiple browsers.
+
+The goal is really to make sure that things work consistently on as many different browsers as possible (depending on the scope of the project).
+
+**It implies accessibility verifications and styles verifications.**
+
+### The testing tool
+
+
+For this kind of project, I will try to use only one testing tool: [Playwright](https://playwright.dev/). I don't think it's necessary to over-complicate the initial problem.
+
+Playwright is a testing tool that starts browsers and that provides APIs to interact directly with them. It's like [Cypress](https://www.cypress.io/), except that **it can run on Safari** — and this is the reason why I would use Playwright instead of Cypress for this kind of project. Being able to run on Firefox, [Chromium based browsers](https://en.wikipedia.org/wiki/Chromium_(web_browser)), and Safari allows me to get more confidence on a wide variety of browsers.
+
+_On a side note, I personally find Playwright to be less intuitive to use than Cypress._
+
+### Playwright and keyboard navigation tests
+
+[Playwright comes with a set of very helpful keyboard APIs](https://playwright.dev/docs/api/class-keyboard) that can be used to make assertions when navigating. On an important note, Playwright supports `Tab` by default (which [Cypress does not at the date of this post](https://docs.cypress.io/api/commands/type#Tabbing)).
+
+As an example, it's possible to run the following test:
+
+```js
+// Testing a radio button
+test('moves the focus to "Bagel" when pressing "ArrowDown" on the pizza radio element', async () => {
+  // Arrange
+  await page.focus('#pizza');
+
+  // Act
+  await page.keyboard.press('ArrowDown');
+
+  // Assert
+  const bagelRadioButton = await page.$('#bagel');
+  expect(await bagelRadioButton?.isChecked()).toBe(true);
+});
+```
+
+### Catching accessibility issues the sooner
+
+Some accessibility issues (around 30%) can be caught with automation tools and so, can be part of the testing pipeline.
+
+In order to catch these issues, I like to rely on the [Axe plugin for Playwright](https://github.com/dequelabs/axe-core-npm/blob/develop/packages/playwright/README.md). An exhaustive list of issues that Axe can catch is available on [this page](https://dequeuniversity.com/rules/axe/4.4) (it includes color contrast, valid ARIA attributes and a lof more).
+
+### Catching visual regressions the sooner
+
+This section might be a bit controversed. It's about using visual regression testing tools to make sure that the developers are aware of UI changes.
+
+The idea is to make sure and to strongly validate that **a UI is in a valid state concerning its stylings**.
+
+Tools like [Chromatic](https://www.chromatic.com/) (or [Percy](https://percy.io/)) allow comparing two versions of a UI: a valid one, and a newly suggested one. If there are differences between them, the developers have to manually accept (or reject) the newly suggested one that will become (or not) the valid one.
+
+Most of the time, I'm using [Storybook](https://storybook.js.org/) to showcase the components of the UI libraries I'm building, and Chromatic is a good fit in my experience.
+
+## Last words
+
+In an even better world, I would use the UI library project to build the product. I will get a lot of confidence about the UI components used and also a strong confidence about the business that I'm shipping.
+
+If you have other preferences, or things on which you would need more information, [make sure to reach out to me](https://twitter.com/mfrachet).

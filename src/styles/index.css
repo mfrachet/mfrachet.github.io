@@ -10,8 +10,8 @@ body {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+    "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 em {
@@ -80,11 +80,7 @@ h1 {
   line-height: 1.4;
   margin-top: var(--s-4);
   margin-bottom: var(--s-2);
-  background-image: linear-gradient(
-    90deg,
-    var(--primary-color),
-    var(--secondary-color)
-  );
+  background-image: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -427,11 +423,7 @@ p.subtitle {
 .card {
   padding: var(--s-0);
   border-radius: 8px;
-  background: linear-gradient(
-    45deg,
-    var(--secondary-color) 0%,
-    var(--primary-color) 100%
-  );
+  background: linear-gradient(45deg, var(--secondary-color) 0%, var(--primary-color) 100%);
   transition: transform 0.2s ease-in-out;
   cursor: pointer;
 }
@@ -476,4 +468,21 @@ p.subtitle {
 .read-all {
   display: inline-block;
   margin-top: var(--s-2);
+}
+
+blockquote {
+  margin-top: var(--s-4);
+  padding: var(--s-4);
+  border-radius: 4px;
+  background: var(--bg-hover);
+  font-style: italic;
+  border-left: 3px solid var(--secondary-color);
+}
+
+blockquote > p {
+  margin-top: 0;
+}
+
+a.anchor {
+  display: none;
 }
