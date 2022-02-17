@@ -10,7 +10,7 @@ tags: ["post"]
 This post is about sharing my favorite testing stack depending on the context. Note that the tools used are not the same for explained reasons but also because I would prefer to use what seems to be the best tool for the given situation I'm in.
 
 - [Stack for a product](#stack-for-a-product)
-  * [Testing the transitionning states](#testing-the-transitionning-states)
+  * [Testing the transitioning states](#testing-the-transitioning-states)
   * [Testing the E2E integration](#testing-the-e2e-integration)
 - [Stack for UI libraries](#stack-for-ui-libraries)
   * [The testing tool](#the-testing-tool)
@@ -20,54 +20,54 @@ This post is about sharing my favorite testing stack depending on the context. N
 
 ## Stack for a product
 
-When building a product, my main concern is to make sure the overall behaviour is valid. I'm going to verify that the different pages create values by following business guidelines.
-As part of this, I love writing 2 different kind of tests (note that naming testing categories is not my business, I let you decide what they are).
+When building a product, my main concern is to make sure the overall behavior is valid. I'm going to verify that the different pages create values by following business guidelines.
+As part of this, I love writing 2 different kinds of tests (note that naming testing categories is not my business, I let you decide what they are).
 
-### Testing the transitionning states
+### Testing the transitioning states
 
 This corresponds to every intermediate states that may happen during a page lifecycle. For instance, when fetching data from the browser, we could
 
 - verify the **loading** state of the page, checking that it's valid from an accessibility perspective
 - verify the **error** state of the page and making sure it's meaningful
 - verify the **empty** state of the page: what happens when I have 0 products to show on a page?
-- verify the **fullfilled** state of the page, when the data has resolved
+- verify the **fulfilled** state of the page, when the data has been resolved
 
-For this kind of verifications, I like relying on [Jest](https://jestjs.io/fr/docs/getting-started), [Testing Library](https://testing-library.com/docs/react-testing-library/intro/) and [MSW](https://mswjs.io/).
+For this kind of verification, I like to rely on [Jest](https://jestjs.io/fr/docs/getting-started), [Testing Library](https://testing-library.com/docs/react-testing-library/intro/) and [MSW](https://mswjs.io/).
 Also, note that I'm from the "mock as less as possible" school: in an ideal world, no mocks at all. In my experience, I didn't work on applications that would have such complex computations on the frontend that would require mocking javascript modules for simplicity reasons. Stubbing API responses was all I needed.
 
-I'm testing these transitionning states with these tools (and not Cypress) for speed reasons. [While experimenting on my machine](https://github.com/mfrachet/tests), Jest tests (from a single file, no parallelization) were ~8 times faster than their Cypress concurrent, and they require way less setup on the CI.
+I'm testing these transitioning states with these tools (and not Cypress) for speed reasons. [While experimenting on my machine](https://github.com/mfrachet/tests), Jest tests (from a single file, no parallelization) were ~8 times faster than their Cypress concurrent, and they require way less setup on the CI.
 
 ### Testing the E2E integration
 
-This corresponds to starting the whole application, from the frontend to the database, passing by the backend. The idea is to verify the overall coherence of the data flow from one end to the other by navigating, like a regular user on the different pages of the app.
+It corresponds to starting the whole application, from the frontend to the database, passing by the backend. The idea is to verify the overall coherence of the data flow from one end to the other by navigating, like a regular user on the different pages of the app.
 
-This kind of tests takes time to run, they are hard to setup, but they provide a lot of confidence. From my experience, the earlier in the project process they are setup, the easier they are to maintain. Since they are costly, it's important not to run too much of them and
+This kind of test takes time to run, they are hard to set up, but they provide a lot of confidence. From my experience, the earlier in the project process they are set up, the easier they are to maintain. Since they are costly, it's important not to run too much of them and
 to scope what is critical in the application process.
 
-For this kind of tests, I love [Cypress](https://www.cypress.io/). It's very fast, easy to setup on the frontend (I'm not talking about starting the backend and DB here) and the developer experience is a breath.
+For this kind of test, I love [Cypress](https://www.cypress.io/). It's very fast, easy to set up on the frontend (I'm not talking about starting the backend and DB here) and the developer experience is a breath.
 
-As mentioned above, using this tool, I will try to make sure the business is meaningful and that my implementations resolves business use cases. It also means that I will test only what is predictable: I shouldn't be able to simulate a backend error (and the error case is already covered by the previous section).
+As mentioned above, using this tool, I will try to make sure the business is meaningful and that my implementations resolve business use cases. It also means that I will test only what is predictable: I shouldn't be able to simulate a backend error (and the error case is already covered by the previous section).
 
-> Trick: To speed up Cypress tests, you can create a custom command for login that directly hit the API, without going through the whole UIs. Plus, if you have the opportunity, try to run the test on SQLite database. It saved ~100 seconds of tests in one of my apps passing from ~130 seconds to only ~30 seconds.
+> Trick: To speed up Cypress tests, you can create a custom command for login that directly hit the API, without going through the whole UIs. Plus, if you have the opportunity, try to run the test on a SQLite database. It saved ~100 seconds of tests in one of my apps passing from ~130 seconds to only ~30 seconds.
 
-And of course, I will run accessibility page by page to make sure the application specific semantic and ARIA things are valid with [cypress-axe](https://github.com/component-driven/cypress-axe).
+And of course, I will run accessibility page by page to make sure the application-specific semantic and ARIA things are valid with [cypress-axe](https://github.com/component-driven/cypress-axe).
 
 ## Stack for UI libraries
 
-When building UI libraries (for a design system for example) my main concern is to make sure the components behaviours and visual representations are the same across multiple browsers.
+When building UI libraries (for a design system for example) my main concern is to make sure the components' behaviors and visual representations are the same across multiple browsers.
 
 The goal is really to make sure that things work consistently on as many different browsers as possible (depending on the scope of the project).
 
-**This implies accessibility verifications and styles verifications.**
+**It implies accessibility verifications and styles verifications.**
 
 ### The testing tool
 
 
 For this kind of project, I will try to use only one testing tool: [Playwright](https://playwright.dev/). I don't think it's necessary to over-complicate the initial problem.
 
-Playwright is a testing tool that starts browsers and that provides APIs to interact directly with them. It's like [Cypress](https://www.cypress.io/), except that **it can run on Safari** — and this is the reason why I would use Playwright instead of Cypress for this kind of projects. Being able to run on Firefox, [Chromium based browsers](https://en.wikipedia.org/wiki/Chromium_(web_browser)) and Safari allows me to get more confidence on a wide variety of browsers.
+Playwright is a testing tool that starts browsers and that provides APIs to interact directly with them. It's like [Cypress](https://www.cypress.io/), except that **it can run on Safari** — and this is the reason why I would use Playwright instead of Cypress for this kind of project. Being able to run on Firefox, [Chromium based browsers](https://en.wikipedia.org/wiki/Chromium_(web_browser)), and Safari allows me to get more confidence on a wide variety of browsers.
 
-_On a side note, I personnally find Playwright to be less intuitive to use than Cypress._
+_On a side note, I personally find Playwright to be less intuitive to use than Cypress._
 
 ### Playwright and keyboard navigation tests
 
@@ -102,9 +102,9 @@ This section might be a bit controversed. It's about using visual regression tes
 
 The idea is to make sure and to strongly validate that **a UI is in a valid state concerning its stylings**.
 
-Tools like [Chromatic](https://www.chromatic.com/) (or [Percy](https://percy.io/)) allow to compare two versions of a UI: a valid one, and a newly suggested one. If there are differences between them, the developers has to manually accept (or reject) the newly suggested one that will become (or not) the valid one.
+Tools like [Chromatic](https://www.chromatic.com/) (or [Percy](https://percy.io/)) allow comparing two versions of a UI: a valid one, and a newly suggested one. If there are differences between them, the developers have to manually accept (or reject) the newly suggested one that will become (or not) the valid one.
 
-Most of the time, I'm using [Storybook](https://storybook.js.org/) to showcase the components of the UI libraries I'm building and Chromatic is a good fit in my experience.
+Most of the time, I'm using [Storybook](https://storybook.js.org/) to showcase the components of the UI libraries I'm building, and Chromatic is a good fit in my experience.
 
 ## Last words
 
