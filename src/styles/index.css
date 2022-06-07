@@ -477,3 +477,15 @@ p.subtitle {
   display: inline-block;
   margin-top: var(--s-2);
 }
+
+blockquote {
+  border-left: 4px solid var(--primary-color-lighter);
+  padding: var(--s-1) var(--s-3);
+  margin-top: var(--s-2);
+  border-radius: 4px;
+  font-style: italic;
+}
+
+blockquote p {
+  margin: 0;
+}
