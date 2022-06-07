@@ -4,15 +4,14 @@ date: 2022-06-07
 metaImage: "jamstack.png"
 metaKeywords: "testing,playwright,browsers,parallel"
 excerpt: ""
-tags: ['post']
+tags: ["post"]
 ---
 
 _A bunch of context will be given before providing the solution. Feel free to skip to the solution section._
 
-
 ## The story
 
-My current side project is called [Progressively](https://github.com/mfrachet/progressively), and it aims to be a very simple, with lightweight client side SDKs and with an accessible dashboard,  **feature flag solution**.
+My current side project is called [Progressively](https://github.com/mfrachet/progressively), and it aims to be a very simple, with lightweight client side SDKs and with an accessible dashboard, **feature flag solution**.
 
 A feature flag solution is a tool that allows to toggle a feature on and off, at runtime, based on some criterias.
 
@@ -32,21 +31,21 @@ that would allow me to make assumptions based on a (customizable) pool of users.
 So here's the situation, I want to write automated tests that could look like:
 
 - start N browsers
-- toggle a feature impacting M percent of the browsers 
+- toggle a feature impacting M percent of the browsers
 - asserting that these M browsers see the activated variant
 - asserting that the (N-M) browers see the NOT activated variant
 
 ## Why it's a problem?
 
-The biggest problem regarding what I want to achieve, using regular tools like Cypress or Jest, is the incapacity to trigger **one** action impacting **multiple** browsers in parallel and make **one** assertion after that.
+The biggest problem regarding what I want to achieve, using regular tools like [Cypress](https://www.cypress.io/) or [Jest](https://jestjs.io/), is the incapacity to trigger **one** action impacting **multiple** browsers in parallel and make **one** assertion after that.
 
 For instance, using Cypress, I'm not able to start 30 instances of chrome and make assertions on them. When I write the following test, it runs in one dedicated instance Chrome:
 
 ```js
 // only runs in one dedicated browser, no possibility to run 10 instances and then make assertions.
-it('verifies something', () => {
-  cy.contain('Hello world').should('be.visible')
-})
+it("verifies something", () => {
+  cy.contain("Hello world").should("be.visible");
+});
 ```
 
 ## How to solve this problem?
@@ -56,8 +55,92 @@ One solution to solve this problem would be to have a tool allowing to make asse
 ```js
 BROWSER_COUNT = 100;
 
-startBrowsers(BROWSER_COUNT);          // start BROWSER_COUNT browsers
+startBrowsers(BROWSER_COUNT); // start BROWSER_COUNT browsers
 toggleFeatureFlag(25 / BROWSER_COUNT); // target 25% of the user pool
-assertActivatedVariant(25)             // verify that ~25 (plus or minus) browser received the activated variant
-assertNotActivatedVariant(75)          // verify that ~75 (plus or minus) browser received the NOT activated variant
+assertActivatedVariant(25); // verify that ~25 (plus or minus) browser received the activated variant
+assertNotActivatedVariant(75); // verify that ~75 (plus or minus) browser received the NOT activated variant
+```
+
+## What can we do?
+
+If Cypress can't help us in this situation, [Playwright](https://playwright.dev/) can. One of the great thing about Playwright is that its core
+is not tightly coupled to any specific test runner (the team behind the tool is developing a test runner, but it's possible to use playwright without it).
+
+What it means is that we can use Playwright like Puppeteer: using a regular Node.js file.
+
+Let's write some code.
+
+### The runner
+
+Let's start from the outside: how to run the tests. I did not want something very complicated so basically, the command allowing the start the tests looks the following:
+
+```json
+{
+  "scripts": {
+    "test:chromium": "BROWSER_COUNT=100 node ./tests/run.js"
+  }
+}
+```
+
+The `./tests/run.js` corresponds to the naive implementation of the test runner:
+
+```javascript
+import { runner } from "./helpers/runner";
+
+async function run() {
+  // Runs only on this specific file
+  await runner.run("./my-test-suite");
+}
+
+run();
+```
+
+The `./helpers/runner.js` file looks the following:
+
+```javascript
+const createRunner = () => {
+  const _tests: = [];
+
+  // This function helps to register the different test of a given testing file
+  const registerTest = (testFn) => {
+    _tests.push(testFn);
+  };
+
+  // This function really runs the test previously registered
+  const run = async (filePath: string) => {
+    require(path.join(__dirname, "..", filePath));
+
+    for (const testFn of _tests) {
+      await testFn();
+    }
+  };
+
+  return {
+    registerTest,
+    run,
+  };
+};
+
+export const runner = createRunner();
+
+// The "test" function is equivalent to "it" in Jest or Cypress
+export const test = (name, fn, config) => {
+  const testFn = async () => {
+    try {
+      const browserChain = await BrowserChain.create(
+        config.userCount,
+        config.type
+      );
+
+      await fn(browserChain, config);
+      await browserChain.closeAll();
+      console.info(chalk.green(`✓ ${name} (${config.userCount} users)`));
+    } catch (error) {
+      console.error(chalk.red(`FAILED: ${name} (${config.userCount} users)`));
+      throw error;
+    }
+  };
+
+  runner.registerTest(testFn);
+};
 ```
