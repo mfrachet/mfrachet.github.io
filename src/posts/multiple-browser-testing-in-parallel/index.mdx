@@ -124,6 +124,7 @@ const createRunner = () => {
 export const runner = createRunner();
 
 // The "test" function is equivalent to "it" in Jest or Cypress
+// It's used the following way: test("do something", (browsers) => {})
 export const test = (name, fn, config) => {
   const testFn = async () => {
     try {
