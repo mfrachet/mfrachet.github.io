@@ -1,5 +1,0 @@
-{
-    "componentChunkName": "component---src-posts-a-b-testing-with-the-jamstack-index-mdx",
-    "path": "/a-b-testing-with-the-jamstack/",
-    "result": {"pageContext":{"frontmatter":{"title":"A/B testing with the JAMstack","date":"2020-10-25T00:00:00.000Z","metaImage":"jamstack.png","metaKeywords":"jamstack, split testing, ab testing, netlify, gatsby, nextjs, 11ty, react","excerpt":"The JAMstack has been talked about in recent years like a way to create static websites that scales very well in many different ways. Since it becomes more and more mainstream, it made sense to people to think about how to apply older patterns that we like in this quite particular context.","tags":["post"]}}},
-    "staticQueryHashes": []}
